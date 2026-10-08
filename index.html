@@ -1,267 +1,187 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="কাল্পনিক ডেমো তথ্য খোঁজার বাংলা সার্চ ওয়েবসাইট">
-  <title>বাংলা তথ্য অনুসন্ধান</title>
-
-  <style>
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Arial, "Noto Sans Bengali", sans-serif;
-      background: #f2f6f5;
-      color: #18332c;
-    }
-
-    header {
-      background: #075e48;
-      color: white;
-      text-align: center;
-      padding: 35px 15px;
-    }
-
-    header h1 { margin: 0 0 10px; }
-    header p { margin: 0; }
-
-    main {
-      width: min(750px, 94%);
-      margin: 25px auto;
-    }
-
-    .panel {
-      background: white;
-      border-radius: 14px;
-      padding: 22px;
-      margin-bottom: 18px;
-      box-shadow: 0 4px 16px #1232;
-    }
-
-    label {
-      display: block;
-      font-weight: bold;
-      margin: 14px 0 7px;
-    }
-
-    input, select, button {
-      width: 100%;
-      padding: 13px;
-      border-radius: 8px;
-      font: inherit;
-    }
-
-    input, select {
-      border: 1px solid #bdccc6;
-      background: white;
-    }
-
-    button {
-      margin-top: 15px;
-      border: 0;
-      background: #087f5b;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    button:hover { background: #056447; }
-
-    .notice {
-      background: #fff5d9;
-      padding: 12px;
-      border-radius: 8px;
-      font-size: 14px;
-      line-height: 1.7;
-    }
-
-    .result {
-      border: 1px solid #dce7e2;
-      padding: 15px;
-      border-radius: 10px;
-      margin-top: 12px;
-      overflow-wrap: anywhere;
-    }
-
-    .result h3 { margin-top: 0; color: #075e48; }
-    .muted { color: #60736b; font-size: 14px; }
-    footer { text-align: center; padding: 20px; color: #60736b; }
-
-    @media (max-width: 480px) {
-      header { padding: 27px 12px; }
-      .panel { padding: 16px; }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>বাংলা নাম অনুসন্ধান</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f7fb;color:#18332c;font-family:Arial,"Noto Sans Bengali",sans-serif}
+header{background:#087a50;color:white;text-align:center;padding:25px 14px}header h1{margin:0 0 8px;font-size:26px}header p{margin:0}
+main{max-width:850px;margin:22px auto;padding:0 14px}.card{background:white;padding:20px;margin:14px 0;border-radius:14px;box-shadow:0 3px 14px #173b2712}
+h2{font-size:20px;margin:0 0 14px}label{display:block;font-weight:bold;margin:10px 0 6px}input,button{font:inherit;padding:11px;border-radius:8px}input{width:100%;border:1px solid #b8c8c0;background:white}button{border:0;background:#087a50;color:white;cursor:pointer;margin-top:10px;font-weight:bold}button:disabled{opacity:.55;cursor:wait}.secondary{background:#465a52}.danger{background:#a62d2d}.row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1;min-width:180px}.muted{color:#586b63;font-size:14px;line-height:1.6}.status{padding:10px;border-radius:8px;background:#edf7f0;margin-top:10px;white-space:pre-wrap}.result{border-top:1px solid #e1e9e4;padding:12px 0}.result strong{font-size:17px}.hidden{display:none}.warning{background:#fff5dc;padding:12px;border-radius:8px;color:#6d4d00;line-height:1.6}
+</style>
 </head>
-
 <body>
-  <header>
-    <h1>বাংলা তথ্য অনুসন্ধান</h1>
-    <p>নাম ও জেলা দিয়ে ডেমো তথ্য খুঁজুন</p>
-  </header>
+<header><h1>বাংলা নাম অনুসন্ধান</h1><p>অনুমোদিত ব্যবহারকারীদের জন্য ব্যক্তিগত ফাইল সার্চ</p></header>
+<main>
+<div class="warning">গুরুত্বপূর্ণ: নিচের Firebase সেটআপ ও নিরাপত্তা Rules না করা পর্যন্ত এই পেজে বাস্তব ব্যক্তিগত তথ্য ব্যবহার করবেন না। GitHub Pages-এর কোড সবাই দেখতে পারে; ফাইলের তথ্য Firebase-এ নিরাপদ Rules দিয়ে রাখতে হবে।</div>
 
-  <main>
-    <section class="panel">
-      <div class="notice">
-        <strong>ডেমো ওয়েবসাইট:</strong>
-        এখানে সব নাম ও তথ্য কাল্পনিক।
-        কোনো বাস্তব ব্যক্তির ভোটার বা পরিচয়পত্রের তথ্য নেই।
-      </div>
+<section class="card" id="loginCard">
+<h2>লগইন</h2>
+<p class="muted">Firebase Console-এ আগে অনুমোদিত ব্যবহারকারীর অ্যাকাউন্ট তৈরি করতে হবে। এই পেজে নতুন অ্যাকাউন্ট তৈরি করা যাবে না।</p>
+<label for="email">ইমেইল</label><input id="email" type="email" autocomplete="username" placeholder="আপনার ইমেইল">
+<label for="password">পাসওয়ার্ড</label><input id="password" type="password" autocomplete="current-password" placeholder="পাসওয়ার্ড">
+<button id="loginBtn">লগইন করুন</button>
+<div id="loginStatus" class="status" aria-live="polite"></div>
+</section>
 
-      <label for="personName">নাম লিখুন</label>
-      <input id="personName"
-        type="search"
-        placeholder="যেমন: মোহাম্মদ রহিম"
-        autocomplete="off">
+<div id="app" class="hidden">
+<section class="card">
+<div class="row" style="align-items:center"><h2 style="flex:2">ফাইল থেকে তথ্য যোগ করুন</h2><button id="logoutBtn" class="secondary" style="flex:1">লগআউট</button></div>
+<p class="muted">Excel (.xlsx/.xls), CSV ও টেক্সট-ভিত্তিক PDF বেছে নিন। ফাইলের লেখা বের করে সার্চ ডাটাবেসে রাখা হবে। স্ক্যান করা ছবির PDF থেকে লেখা বের হবে না (OCR দরকার)।</p>
+<label for="files">ফাইল নির্বাচন</label><input id="files" type="file" multiple accept=".xlsx,.xls,.csv,.pdf">
+<button id="uploadBtn">নির্বাচিত ফাইলের লেখা যোগ করুন</button>
+<div id="uploadStatus" class="status" aria-live="polite"></div>
+</section>
 
-      <label for="district">জেলা নির্বাচন করুন</label>
-      <select id="district">
-        <option value="">সব জেলা</option>
-        <option value="সুনামগঞ্জ">সুনামগঞ্জ</option>
-        <option value="সিলেট">সিলেট</option>
-        <option value="ঢাকা">ঢাকা</option>
-      </select>
+<section class="card">
+<h2>নাম সার্চ করুন</h2>
+<label for="query">নাম লিখুন</label><input id="query" placeholder="যেমন: আমিন আলী" autocomplete="off">
+<button id="searchBtn">সার্চ</button>
+<p class="muted">নামের বানান হুবহু বা কাছাকাছি মিল খুঁজতে সাধারণত একই লেখা ব্যবহার করুন। এটি প্রাথমিক substring search; ভুল বানান/উচ্চারণ বুঝে নিজে থেকে মিল খুঁজে পায় না।</p>
+<div id="searchStatus" class="status" aria-live="polite"></div>
+<div id="results"></div>
+</section>
+</div>
+</main>
 
-      <button id="searchButton" type="button">তথ্য খুঁজুন</button>
-      <button id="showAllButton" type="button">সব ডেমো তথ্য দেখুন</button>
+<!-- Firebase config নিচে নিজের Firebase project-এর তথ্য দিয়ে পূরণ করুন। -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-      <p id="status" class="muted" aria-live="polite">
-        নাম লিখে সার্চ করুন।
-      </p>
-    </section>
+const firebaseConfig = {
+  apiKey: "PASTE_YOUR_FIREBASE_API_KEY",
+  authDomain: "PASTE_YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "PASTE_YOUR_PROJECT_ID",
+  storageBucket: "PASTE_YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "PASTE_YOUR_MESSAGING_SENDER_ID",
+  appId: "PASTE_YOUR_FIREBASE_APP_ID"
+};
 
-    <section class="panel">
-      <h2>সার্চের ফলাফল</h2>
-      <div id="results"></div>
-    </section>
-  </main>
+const loginCard = document.getElementById("loginCard");
+const appPanel = document.getElementById("app");
+const loginStatus = document.getElementById("loginStatus");
+const uploadStatus = document.getElementById("uploadStatus");
+const searchStatus = document.getElementById("searchStatus");
+const results = document.getElementById("results");
+let auth, db, configReady = false;
 
-  <footer>
-    বাংলা তথ্য অনুসন্ধান · শিক্ষামূলক ডেমো
-  </footer>
-
-  <script>
-    // সম্পূর্ণ কাল্পনিক নমুনা তথ্য।
-    // এখানে NID, ভোটার নম্বর বা ব্যক্তিগত ঠিকানা রাখা হয়নি।
-    const demoData = [
-      {
-        id: "DEMO-001",
-        name: "মোহাম্মদ রহিম",
-        district: "সুনামগঞ্জ",
-        category: "নমুনা রেকর্ড"
-      },
-      {
-        id: "DEMO-002",
-        name: "আয়েশা বেগম",
-        district: "সিলেট",
-        category: "নমুনা রেকর্ড"
-      },
-      {
-        id: "DEMO-003",
-        name: "করিম উদ্দিন",
-        district: "ঢাকা",
-        category: "নমুনা রেকর্ড"
-      },
-      {
-        id: "DEMO-004",
-        name: "মোছা. নাসিমা খাতুন",
-        district: "সুনামগঞ্জ",
-        category: "নমুনা রেকর্ড"
-      },
-      {
-        id: "DEMO-005",
-        name: "আব্দুল কাদের",
-        district: "সিলেট",
-        category: "নমুনা রেকর্ড"
-      }
-    ];
-
-    const nameInput = document.getElementById("personName");
-    const districtInput = document.getElementById("district");
-    const results = document.getElementById("results");
-    const status = document.getElementById("status");
-
-    // বাংলা ও ইংরেজি অক্ষরের সাধারণ পার্থক্য সামলানো।
-    function normalize(value) {
-      return value
-        .normalize("NFC")
-        .toLocaleLowerCase("bn")
-        .trim()
-        .replace(/\s+/g, " ");
-    }
-
-    function displayResults(list) {
-      results.replaceChildren();
-
-      if (list.length === 0) {
-        status.textContent = "কোনো মিল পাওয়া যায়নি।";
-        return;
-      }
-
-      status.textContent = "মোট " + list.length + "টি ডেমো রেকর্ড পাওয়া গেছে।";
-
-      list.forEach(person => {
-        const card = document.createElement("article");
-        card.className = "result";
-
-        const title = document.createElement("h3");
-        title.textContent = person.name;
-
-        const id = document.createElement("p");
-        id.textContent = "রেকর্ড: " + person.id;
-
-        const district = document.createElement("p");
-        district.textContent = "জেলা: " + person.district;
-
-        const category = document.createElement("p");
-        category.textContent = "ধরন: " + person.category;
-
-        const disclaimer = document.createElement("p");
-        disclaimer.className = "muted";
-        disclaimer.textContent = "কাল্পনিক ডেমো তথ্য";
-
-        card.append(title, id, district, category, disclaimer);
-        results.appendChild(card);
-      });
-    }
-
-    function searchData() {
-      const query = normalize(nameInput.value);
-      const selectedDistrict = districtInput.value;
-
-      if (!query && !selectedDistrict) {
-        status.textContent = "একটি নাম লিখুন অথবা জেলা নির্বাচন করুন।";
-        results.replaceChildren();
-        return;
-      }
-
-      const matched = demoData.filter(person => {
-        const nameMatches =
-          !query || normalize(person.name).includes(query);
-
-        const districtMatches =
-          !selectedDistrict || person.district === selectedDistrict;
-
-        return nameMatches && districtMatches;
-      });
-
-      displayResults(matched);
-    }
-
-    document.getElementById("searchButton")
-      .addEventListener("click", searchData);
-
-    nameInput.addEventListener("keydown", event => {
-      if (event.key === "Enter") searchData();
+try {
+  configReady = !Object.values(firebaseConfig).some(v => !v || v.startsWith("PASTE_"));
+  if (configReady) {
+    const firebaseApp = initializeApp(firebaseConfig);
+    auth = getAuth(firebaseApp);
+    db = getFirestore(firebaseApp);
+    onAuthStateChanged(auth, user => {
+      loginCard.classList.toggle("hidden", !!user);
+      appPanel.classList.toggle("hidden", !user);
+      if (user) loginStatus.textContent = "";
     });
+  } else {
+    loginStatus.textContent = "প্রথমে কোডের firebaseConfig অংশে আপনার Firebase project-এর তথ্য বসাতে হবে।";
+  }
+} catch (e) { loginStatus.textContent = "Firebase সেটআপে সমস্যা: " + e.message; }
 
-    document.getElementById("showAllButton")
-      .addEventListener("click", () => displayResults(demoData));
+document.getElementById("loginBtn").addEventListener("click", async () => {
+  if (!configReady) { loginStatus.textContent = "আগে Firebase config বসান।"; return; }
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  try { await signInWithEmailAndPassword(auth, email, password); loginStatus.textContent = "লগইন হয়েছে।"; }
+  catch (e) { loginStatus.textContent = "লগইন হয়নি। ইমেইল/পাসওয়ার্ড ও Firebase সেটিংস দেখুন। (" + e.code + ")"; }
+});
+document.getElementById("logoutBtn").addEventListener("click", async () => { await signOut(auth); });
 
-    // পেজ খোলার সঙ্গে সঙ্গে নমুনা ফলাফল দেখান।
-    displayResults(demoData);
-  </script>
+async function extractText(file) {
+  const name = file.name.toLowerCase();
+  if (name.endsWith(".csv") || name.endsWith(".xlsx") || name.endsWith(".xls")) {
+    const XLSX = await import("https://cdn.jsdelivr.net/npm/xlsx@0.18.5/+esm");
+    const bytes = await file.arrayBuffer();
+    const workbook = XLSX.read(bytes, {type:"array"});
+    return workbook.SheetNames.map(sheetName => {
+      const sheet = workbook.Sheets[sheetName];
+      return `শিট: ${sheetName}\n` + XLSX.utils.sheet_to_csv(sheet);
+    }).join("\n\n");
+  }
+  if (name.endsWith(".pdf")) {
+    const pdfjs = await import("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs");
+    pdfjs.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs";
+    const pdf = await pdfjs.getDocument({data: await file.arrayBuffer()}).promise;
+    const pages = [];
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      pages.push(content.items.map(item => item.str).join(" "));
+    }
+    return pages.map((t,i)=>`পৃষ্ঠা ${i+1}\n${t}`).join("\n\n");
+  }
+  throw new Error("এই ফাইলের ধরন সমর্থিত নয়: " + file.name);
+}
+
+document.getElementById("uploadBtn").addEventListener("click", async () => {
+  const user = auth?.currentUser;
+  if (!user) { uploadStatus.textContent = "আগে লগইন করুন।"; return; }
+  const files = [...document.getElementById("files").files];
+  if (!files.length) { uploadStatus.textContent = "আগে একটি ফাইল নির্বাচন করুন।"; return; }
+  const btn = document.getElementById("uploadBtn"); btn.disabled = true;
+  let done = 0; const messages = [];
+  try {
+    for (const file of files) {
+      uploadStatus.textContent = `পড়া হচ্ছে: ${file.name}`;
+      const text = await extractText(file);
+      if (!text.trim()) { messages.push(`${file.name}: কোনো লেখা পাওয়া যায়নি (স্ক্যান PDF হতে পারে)।`); continue; }
+      const chunkSize = 5000;
+      const total = Math.ceil(text.length / chunkSize);
+      for (let i = 0; i < total; i++) {
+        await addDoc(collection(db, "searchChunks"), {
+          fileName: file.name,
+          chunkIndex: i,
+          totalChunks: total,
+          text: text.slice(i * chunkSize, (i + 1) * chunkSize),
+          ownerUid: user.uid,
+          createdAt: serverTimestamp()
+        });
+      }
+      done++; messages.push(`${file.name}: যোগ হয়েছে`);
+    }
+    uploadStatus.textContent = `${done}টি ফাইলের লেখা যোগ হয়েছে।\n${messages.join("\n")}`;
+  } catch (e) { uploadStatus.textContent = "সমস্যা হয়েছে: " + e.message + "\nFirebase Firestore Rules ও সেটআপ দেখুন।"; }
+  finally { btn.disabled = false; }
+});
+
+function normalize(s) {
+  return s.toLocaleLowerCase("bn").replace(/[ঃঁং]/g,"").replace(/[।,;:()[\]{}"']/g," ").replace(/\s+/g," ").trim();
+}
+document.getElementById("searchBtn").addEventListener("click", async () => {
+  const user = auth?.currentUser;
+  const q = normalize(document.getElementById("query").value);
+  results.replaceChildren();
+  if (!user) { searchStatus.textContent = "আগে লগইন করুন।"; return; }
+  if (!q) { searchStatus.textContent = "একটি নাম লিখুন।"; return; }
+  const btn = document.getElementById("searchBtn"); btn.disabled = true;
+  try {
+    searchStatus.textContent = "খোঁজা হচ্ছে...";
+    const snap = await getDocs(collection(db, "searchChunks"));
+    let count = 0;
+    snap.forEach(d => {
+      const item = d.data();
+      const text = String(item.text || "");
+      const normalized = normalize(text);
+      const idx = normalized.indexOf(q);
+      if (idx >= 0) {
+        count++;
+        const div = document.createElement("div"); div.className = "result";
+        const title = document.createElement("strong"); title.textContent = item.fileName || "নামহীন ফাইল";
+        const snippet = document.createElement("p"); snippet.textContent = text.slice(Math.max(0,idx-100), Math.min(text.length,idx+q.length+180));
+        snippet.style.whiteSpace = "pre-wrap";
+        div.append(title, snippet); results.append(div);
+      }
+    });
+    searchStatus.textContent = count ? `মিল পাওয়া গেছে: ${count}টি অংশে` : "কোনো মিল পাওয়া যায়নি। বানান ঠিক আছে কি না বা ফাইল যোগ হয়েছে কি না দেখুন।";
+  } catch (e) { searchStatus.textContent = "সার্চে সমস্যা: " + e.message + "\nFirebase Rules পরীক্ষা করুন।"; }
+  finally { btn.disabled = false; }
+});
+</script>
 </body>
 </html>
