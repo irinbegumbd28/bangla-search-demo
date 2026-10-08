@@ -1,0 +1,267 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="কাল্পনিক ডেমো তথ্য খোঁজার বাংলা সার্চ ওয়েবসাইট">
+  <title>বাংলা তথ্য অনুসন্ধান</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, "Noto Sans Bengali", sans-serif;
+      background: #f2f6f5;
+      color: #18332c;
+    }
+
+    header {
+      background: #075e48;
+      color: white;
+      text-align: center;
+      padding: 35px 15px;
+    }
+
+    header h1 { margin: 0 0 10px; }
+    header p { margin: 0; }
+
+    main {
+      width: min(750px, 94%);
+      margin: 25px auto;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 16px #1232;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin: 14px 0 7px;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 13px;
+      border-radius: 8px;
+      font: inherit;
+    }
+
+    input, select {
+      border: 1px solid #bdccc6;
+      background: white;
+    }
+
+    button {
+      margin-top: 15px;
+      border: 0;
+      background: #087f5b;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover { background: #056447; }
+
+    .notice {
+      background: #fff5d9;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .result {
+      border: 1px solid #dce7e2;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .result h3 { margin-top: 0; color: #075e48; }
+    .muted { color: #60736b; font-size: 14px; }
+    footer { text-align: center; padding: 20px; color: #60736b; }
+
+    @media (max-width: 480px) {
+      header { padding: 27px 12px; }
+      .panel { padding: 16px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>বাংলা তথ্য অনুসন্ধান</h1>
+    <p>নাম ও জেলা দিয়ে ডেমো তথ্য খুঁজুন</p>
+  </header>
+
+  <main>
+    <section class="panel">
+      <div class="notice">
+        <strong>ডেমো ওয়েবসাইট:</strong>
+        এখানে সব নাম ও তথ্য কাল্পনিক।
+        কোনো বাস্তব ব্যক্তির ভোটার বা পরিচয়পত্রের তথ্য নেই।
+      </div>
+
+      <label for="personName">নাম লিখুন</label>
+      <input id="personName"
+        type="search"
+        placeholder="যেমন: মোহাম্মদ রহিম"
+        autocomplete="off">
+
+      <label for="district">জেলা নির্বাচন করুন</label>
+      <select id="district">
+        <option value="">সব জেলা</option>
+        <option value="সুনামগঞ্জ">সুনামগঞ্জ</option>
+        <option value="সিলেট">সিলেট</option>
+        <option value="ঢাকা">ঢাকা</option>
+      </select>
+
+      <button id="searchButton" type="button">তথ্য খুঁজুন</button>
+      <button id="showAllButton" type="button">সব ডেমো তথ্য দেখুন</button>
+
+      <p id="status" class="muted" aria-live="polite">
+        নাম লিখে সার্চ করুন।
+      </p>
+    </section>
+
+    <section class="panel">
+      <h2>সার্চের ফলাফল</h2>
+      <div id="results"></div>
+    </section>
+  </main>
+
+  <footer>
+    বাংলা তথ্য অনুসন্ধান · শিক্ষামূলক ডেমো
+  </footer>
+
+  <script>
+    // সম্পূর্ণ কাল্পনিক নমুনা তথ্য।
+    // এখানে NID, ভোটার নম্বর বা ব্যক্তিগত ঠিকানা রাখা হয়নি।
+    const demoData = [
+      {
+        id: "DEMO-001",
+        name: "মোহাম্মদ রহিম",
+        district: "সুনামগঞ্জ",
+        category: "নমুনা রেকর্ড"
+      },
+      {
+        id: "DEMO-002",
+        name: "আয়েশা বেগম",
+        district: "সিলেট",
+        category: "নমুনা রেকর্ড"
+      },
+      {
+        id: "DEMO-003",
+        name: "করিম উদ্দিন",
+        district: "ঢাকা",
+        category: "নমুনা রেকর্ড"
+      },
+      {
+        id: "DEMO-004",
+        name: "মোছা. নাসিমা খাতুন",
+        district: "সুনামগঞ্জ",
+        category: "নমুনা রেকর্ড"
+      },
+      {
+        id: "DEMO-005",
+        name: "আব্দুল কাদের",
+        district: "সিলেট",
+        category: "নমুনা রেকর্ড"
+      }
+    ];
+
+    const nameInput = document.getElementById("personName");
+    const districtInput = document.getElementById("district");
+    const results = document.getElementById("results");
+    const status = document.getElementById("status");
+
+    // বাংলা ও ইংরেজি অক্ষরের সাধারণ পার্থক্য সামলানো।
+    function normalize(value) {
+      return value
+        .normalize("NFC")
+        .toLocaleLowerCase("bn")
+        .trim()
+        .replace(/\s+/g, " ");
+    }
+
+    function displayResults(list) {
+      results.replaceChildren();
+
+      if (list.length === 0) {
+        status.textContent = "কোনো মিল পাওয়া যায়নি।";
+        return;
+      }
+
+      status.textContent = "মোট " + list.length + "টি ডেমো রেকর্ড পাওয়া গেছে।";
+
+      list.forEach(person => {
+        const card = document.createElement("article");
+        card.className = "result";
+
+        const title = document.createElement("h3");
+        title.textContent = person.name;
+
+        const id = document.createElement("p");
+        id.textContent = "রেকর্ড: " + person.id;
+
+        const district = document.createElement("p");
+        district.textContent = "জেলা: " + person.district;
+
+        const category = document.createElement("p");
+        category.textContent = "ধরন: " + person.category;
+
+        const disclaimer = document.createElement("p");
+        disclaimer.className = "muted";
+        disclaimer.textContent = "কাল্পনিক ডেমো তথ্য";
+
+        card.append(title, id, district, category, disclaimer);
+        results.appendChild(card);
+      });
+    }
+
+    function searchData() {
+      const query = normalize(nameInput.value);
+      const selectedDistrict = districtInput.value;
+
+      if (!query && !selectedDistrict) {
+        status.textContent = "একটি নাম লিখুন অথবা জেলা নির্বাচন করুন।";
+        results.replaceChildren();
+        return;
+      }
+
+      const matched = demoData.filter(person => {
+        const nameMatches =
+          !query || normalize(person.name).includes(query);
+
+        const districtMatches =
+          !selectedDistrict || person.district === selectedDistrict;
+
+        return nameMatches && districtMatches;
+      });
+
+      displayResults(matched);
+    }
+
+    document.getElementById("searchButton")
+      .addEventListener("click", searchData);
+
+    nameInput.addEventListener("keydown", event => {
+      if (event.key === "Enter") searchData();
+    });
+
+    document.getElementById("showAllButton")
+      .addEventListener("click", () => displayResults(demoData));
+
+    // পেজ খোলার সঙ্গে সঙ্গে নমুনা ফলাফল দেখান।
+    displayResults(demoData);
+  </script>
+</body>
+</html>
